@@ -1,0 +1,108 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{amssymb}
+\graphicspath{{/}}
+\begin{document}
+\noindent Thomas Kaunzinger\\
+EECE 2540\\
+Zhangyu Guan\\
+12/4/2017\\
+\begin{enumerate}
+
+	\item \begin{enumerate}
+
+			\item True
+			\item The hidden terminal problem isn't solved by collision detection but rather CSMA/CA - collision avoidance, as collision detection is very difficult on wireless LAN, as base stations would otherwise be transmitting and receiving many different signals at once.
+			\item While signal-noise ratio is only technically affected by the signal and noise, quality is still affected by other factors and Interference is very possible and important as nearby access points are fairly likely to be using similar frequency band channels as one another, resulting in mixed signals.
+			\item True
+			\item True
+			\item Slotted ALOHA is about twice as efficient over pure ALOHA because pure ALOHA has more overlap potential due to continuous transmission.
+			\item The address resolution protocol (ARP) determines the interface's MAC address using the IP address through establishing ARP tables with broadcasted query packets and responses.
+			\item Ethernet and 802.11 have somewhat similar frame structures, however ethernet's is significantly simpler, with merely a small preamble header, the source and destination, the type of protocol, the data itself, and the crc error detection at the end. While 802.11 has essentially all of these, there's significantly more parameters in the structures including more addresses and sequence control.
+			\item True
+			\item True
+			\item True
+
+		\end{enumerate}
+
+	\item \begin{enumerate}
+
+			\item \includegraphics[scale=0.2]{question2.jpeg}\\
+			\item Node Y can not hear A's RTS, but it can hear the CTS broadcasted by node B, so it knows to activate its virtual carrier sensing flag so ensure that it is not receiving data not meant for it until B sends the ACK that it is done.
+			\item Y will set the flag after the CTS is transmitted until the point where B is finished sending the ACK that it is done receiving data from A, meaning that it will be flagged for the first SIFS as A proccessed the CTS, the time taken to transmit the DATA between A and B, the second SIFS where B is processing the DATA being done sending, and then the time taken for B to transmit its ACK that it's done, meaning that the flag is active for $0.0175 + 1.2 + 0.0175 + 0.08 = 1.315ms$
+
+		\end{enumerate}
+
+	\item \begin{enumerate}
+
+			\footnotesize
+
+			\item \begin{tabular}{c|c c c c c c c c|c c c c c c c c}
+			&&&&Slot 1&&&&&&&&Slot 2\\
+			\hline
+			Code 1  & 1 & 1 & 1 &-1 & 1 &-1 &-1 &-1 & 1 & 1 & 1 &-1 & 1 &-1 &-1 &-1\\
+			Out 1   &-1 &-1 &-1 & 1 &-1 & 1 & 1 & 1 & 1 & 1 & 1 &-1 & 1 &-1 &-1 &-1\\
+			Channel & 0 &-2 & 0 & 2 & 0 & 0 & 2 & 2 & 2 & 0 & 2 & 0 & 2 &-2 & 0 & 0\\
+			Out 2   & 1 &-1 & 1 & 1 & 1 &-1 & 1 & 1 & 1 &-1 & 1 & 1 & 1 &-1 & 1 & 1\\
+			Code 2  &-1 & 1 &-1 &-1 &-1 & 1 &-1 &-1 &-1 & 1 &-1 &-1 &-1 & 1 &-1 &-1\\
+			\end{tabular}
+
+			\normalsize
+
+			\item $data_{slot1, sender1} = \dfrac{\displaystyle \sum_{m = 1}^{8} Channel_{slot1,m} \times code_{slot1,m}}{8}$\\
+			\\
+			$summation = 0 + -2\times1 + 0 + 2\times-1 + 0 + 0 + 2\times-1 + 2\times-1 = -8$\\
+			\\
+			$data_{slot1, sender1} = \dfrac{-8}{8} = -1$
+			\item If one of the senders moves father, either the sender that is now farther will have to transmit with more power, the sender closer to to the base station will have to transmit with less power, or the two senders can transmit at a point somewhere in the middle that will allow their singals received at the base station to be the same.
+
+
+		\end{enumerate}
+
+	\item Jitter is described as the variable network delay of data recieved by the user from the sender as it gets disrupted through propogation, resulting in an originally constant bit rate transmission to be variable. Jitter can be seen between 1 and 2 bytes, as the time it takes to recieve the second byte over the first byte is a lot longer than that of the rate at which the sender was transmitting. Furthermore, between 2 and 5, all the bytes are received at a rate considerably faster than that of the source, but they are all received at the same rate. Finally, between 5 and 6 the rate is again considerably longer than the source. Despite all this jitter, the entire reception time is approximately the same as that of the bitrate at which it was sent.\\
+	\\
+	\\
+	If the video was playing back at 12ms instead of 16ms in this case, there may or may not be jitter, as after the first byte is played back, the user might not have yet received the next byte to play back, as it is delayed by what appears to be 2ms give or take, meaning that if the user was to play it back with the given 2ms buffer, it might have only just received it or it might need to wait.
+
+	\item \begin{enumerate}
+
+			\item The hidden terminal problem describes the issue that some nodes are visible to an access point, but not all of the nodes can hear each other, so they remain unaware of their interference at the access point.
+			\item One cause of the hidden terminal problem could be two nodes separated by a thick wall so they can not communicate between each other, however they can communicate with one common access point in between at the end of the wall (perhaps in the hallway). If they are communicating at the same frequency, the access point will have no idea who is sending what.
+			\item Collision detection would not work as well in wireless LAN because it is a lot easier to detect signal strength in physical wires and to compare transmitted and recieved signals than with wireless LAN. Furthermore, as the receiver is also broadcasting a signal, its signal is too strong and would otherwise drown everything out.
+			\item Collision avoidance works first by having the sender send a request to send packet to reserve a channel for it to transmit data through. These packets can still collide but they're very short. The base station receives this request and broadcasts a clear to send packet back to acknowledge that it's been reserved. The sender will then send its data while the other nodes stay quiet on that channel until the reciever broadcasts an acknowledgement that there was a successful transmission.
+			\item This solves the problem because data is not received during a collision and the sender will have to retransmit the data until it receives the acknowledgement from the receiver.
+
+		\end{enumerate}
+
+	\item As the access points will have different IDs and MAC addresses, the user will still only link to one access point and send its data specifically to the MAC address of that one access point, so even though it is broadcasting and the other access point is receiving the data, it sees that it's not addressed to it and therefore discards the unneeded data. The issue here is that if two users are transmitting at the same time, there will be collision and queuing to make sure both users can send, resulting in halved internet speeds.\\
+	\\
+	If the two stations use different frequency channels, there will be no more collisions and the users will be able to transmit at full speed over the air.
+
+	\item \begin{enumerate}
+
+			\item \begin{tabular}{c|c c c}
+					Packet \# & $t_{send}$ & $t_{receive}$ & $t_{delay}$\\
+					\hline
+					1 & 1 & 8 & 7\\
+					2 & 2 & 9 & 7\\
+					3 & 3 & 12 & 9\\
+					4 & 4 & 12 & 8\\
+					5 & 5 & 12 & 7\\
+					6 & 6 & 15 & 9\\
+					7 & 7 & 15 & 8\\
+					8 & 8 & 16 & 8\\
+
+				\end{tabular}
+
+			\item If the playback starts immediately after the first packet is received, the audio will begin to stutter at the third packet, as it will not be received for another 2ms. The fourth packet will arrive 1ms late and then the fifth will make it on time. After that, the rest of the packets will again be late.
+			\item If the playback starts at 9ms, packet 3 will be the first to miss playback time by 1ms, packet 4 will arrive just on time and 5 will be on time too. After that, packet 6 will again be late for playback by 1ms and then the later packets will arrive just in time.
+			\item For the user to playback all the packets in this chunk at real time, it would have to start playback at time unit 10 or later, a 2 unit delay from when the user received the first packet.
+
+		\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

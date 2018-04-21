@@ -1,0 +1,395 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{amssymb}
+\graphicspath{{/}}
+\begin{document}
+\noindent Thomas Kaunzinger\\
+EECE 2540\\
+Zhangyu Guan\\
+11/9/2017\\
+\begin{enumerate}
+
+	\item \begin{enumerate}
+
+			\item Routing is a control-plane technique used to find a reasonable pathway to send information from the sender to the destination, while forwarding is the data-plane process of actually sending that information between links based on the path determined in routing.
+			\item The three switching fabric tyupes are memory, bus, and crossbar. Memory switching is an old technique involving switching under direct control of the CPU, copying the packet to the memory, limiting the speed to the bandwidth of the memory. Bus switching involves sending queued packets over a shared bus connection without use of the router's processing power. Crossbar/Interconnection networks overcome the limitations of a single bus through a network in which fragmented fixed data cells are sent in along one of many input busses before intersecting and transferring to a bus leading to the output port. The only fabric that can handle multiple packets being sent at once is crossbar, as each input and output port has its own busses, so as long as the packets are being sent from and to different ports from eachother, a unique route of busses can be found to send the packets simultaneously without queuing.
+			\item Routers have at least 2 IP address, with one for every interface to a physical link.
+			\item The IP and TCP datagram format headers require 20 bytes of information for each, meaning that the generated chunk of 40 bytes of data requires another $20 + 20$ bytes of data for the overhead, meaning that the total amount of application data as a proportion is $\dfrac{40}{40+20+20} = \dfrac{40}{80} = 50\%$, with the rest being the overhead.
+			\item A link-state algorithm allows for all components in a network to have a complete knowledge of the distances between links in the entire network, while a distance-vector algorithm finds the fastest path only by using what each router knows about its neighbor and its estimated distance to the destination. LS uses a slow $O(n^2)$ algorithm with $O(nE)$ messages to converge, while DV can vary greatly as a result of creating routing loops (avoidable with poisoned reverse) and count-to-infinity problems.
+			\item Routers use autonomous systems with gateway routers to communicate between systems so that each router only needs to know how to route between each other in its own system and the gateways that will allow routing to other systems as opposed to knowing how to route to every single point in an enormous global system.
+			\item Each autonomous system knows how to route within itself, and as long as it can communicate that route to another system, they do not necessarily have to have the same algorithms to find their routes.
+			\item A subnet is a localized subdivision of an IP network in which users can communicate amongst eachothers. A prefix is the portion of the CIDR addresses which is common among all users in the same subnet system. A BGP route includes the prefix along with the associated attributes.
+			\item Traceroute is a tool for displaying the path and transfer delay across a network. It works by sending a series of UDP segments towards a destination with an increasing TTL for every set until it travels through every node to reach the destination, to which it reports back the time it took to get through all the routers to get there.
+			\item As OSPF uses a link-state algorithm, the router floods the OSPF advertisements to the rest of the routers in the autonomous system.
+			\item A count-to-infinity problem is a routing loop which involves routers to repeatedly send updates to each other at the same time, resulting in extremely slow updates, as some links may still think there is a certain distance for a path to a certain node, and the nodes will now refer back and forth to each other saying that their route to this node exists and claim they have the best route to it.
+			\item (Same as \#1.g)
+			\item In an OSPF system, there are areas dividing the systems hierarchically to advertise its link-state to all of the routers in its own heirarchical area. As each area is divided into smaller areas, the overhead of the link-state advertisements is smaller since each router kind have link states to other components of its own area which themselves can refer among themselves in their own areas.
+
+		\end{enumerate}
+
+	\item \begin{enumerate}
+
+			\item Since the packets are being transferred over a shared bus, the packets cannot be sent at the same time, as a shared bus gives a single user full usage of the bus while its sending its packet, meaning that one user will have to wait in a queue.
+			\item Since a crossbar switch sends packets from one input port to an output port over its own path of busses, it can find a unique route for both packets to be sent to different output ports at the same time.
+			\item Since each input and output port has its own unique bus, if 2 packets were trying to find a path to the same output port, they could take different busses from the different input ports, but ultimately they will have to transfer to the same bus to go to the output port, meaning they will at some point have to share the same bus, resulting in one of the packets needing to queue.
+
+		\end{enumerate}
+
+	\item Subnet 1 requires 60 addresses. $60 \leq 64 = 2^{6}$.\\
+	Mask for subnet 1: $32 - 6 = /26$\\
+	\\
+	Subnet 2 requires 90 addresses. $90 \leq 128 = 2^{7}$.\\
+	Mask for subnet 2: $32 - 7 = /25$\\
+	\\
+	Subnet 3 requires 12 addresses. $12 \leq 16 = 2^{4}$.\\
+	Mask for subnet 3: $32 - 4 = /28$\\
+	\\
+	Subnet 1: 223.1.17.RRXXXXXX\\
+	223.1.17.0/26\\
+	\\
+	Subnet 2: 223.1.17.RXXXXXXX\\
+	223.1.17.128/25\\
+	\\
+	Subnet 3: 223.1.17.RRRRXXXX\\
+	223.1.17.64/28\\
+	\\
+
+	\item $MTU = 700B$\\
+		$F_{data} = MTU - IP$\\
+		$F_{data} = 700B - 20B = 680B$ per fragment\\
+		\\
+		$N_{frags} = \dfrac{datagram - header}{F_{data}}$\\
+		\\
+		$N_{frags} = \dfrac{2400B - 20B}{680B} = 3.5$\\
+		\\
+		$3\times F_{data} + 0.5 \times F_{data}$\\
+		\\
+		4 fragments: 3 fragments with 680B of data (700B total), 1 fragment with 340B of data (360B total)\\
+		\\
+		$Index_{offset} = 680 / 8 = 85$\\
+		\\
+		Fragment 1\\
+		Datagram Length = 700B\\
+		Data size = 680B\\
+		Header size = 20B\\
+		ID = 422\\
+		Offset = 0\\
+		Flag = 1\\
+		\\
+		Fragment 2\\
+		Datagram Length = 700B\\
+		Data size = 680B\\
+		Header size = 20B\\
+		ID = 422\\
+		Offset = 85\\
+		Flag = 1\\
+		\\
+		Fragment 3\\
+		Datagram Length = 700B\\
+		Data size = 680B\\
+		Header size = 20B\\
+		ID = 422\\
+		Offset = 170\\
+		Flag = 1\\
+		\\
+		Fragment 4\\
+		Datagram Length = 360B\\
+		Data size = 340B\\
+		Header size = 20B\\
+		ID = 422\\
+		Offset = 255\\
+		Flag = 0\\
+		\\
+	\item \footnotesize
+		\begin{tabular}{c|c|c|c|c|c|c|c}
+
+			step & N' &D(t),p(t)&D(u),p(u)&D(v),p(v)&D(w),p(w)&D(y),p(y)&D(z),p(z)\\
+			\hline
+			0 & x & $\infty$ & $\infty$ & 3x & 6x & 6x & 8x\\
+			1 & xv & 7v & 6v & 3x & 6x & 6x & 8x\\
+			2 & xvu & 7v & 6v & 3x & 6x & 6x & 8x\\
+			3 & xvuw & 7v & 6v & 3x & 6x & 6x & 8x\\
+			4 & xvuwy & 7v & 6v & 3x & 6x & 6x & 8x\\
+			5 & xvuwyt & 7v & 6v & 3x & 6x & 6x & 8x\\
+			6 & xvuwytz & 7v & 6v & 3x & 6x & 6x & 8x\\
+
+
+		\end{tabular}
+		\normalsize
+
+	\item 
+		\begin{tabular}{c c|c c c c c}
+		 & & Cost to\\
+		 & & u & v & x & y & z\\
+		 \hline
+		 From & v & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$\\
+		 & x & $\infty$ & $\infty$ & $\infty$ & $\infty$ & $\infty$\\
+		 & z & $\infty$ & 6 & 2 & $\infty$ & 0
+		\end{tabular}\\
+		\\
+		\\
+		\begin{tabular}{c c|c c c c c}
+		 & & Cost to\\
+		 & & u & v & x & y & z\\
+		 \hline
+		 From & v & 1 & 0 & 3 & $\infty$ & 6\\
+		 & x & $\infty$ & 3 & 0 & 3 & 2\\
+		 & z & 7 & 5 & 2 & 5 & 0
+		\end{tabular}\\
+		\\
+		\\
+		\begin{tabular}{c c|c c c c c}
+		 & & Cost to\\
+		 & & u & v & x & y & z\\
+		 \hline
+		 From & v & 1 & 0 & 3 & 3 & 5\\
+		 & x & 4 & 3 & 0 & 3 & 2\\
+		 & z & 6 & 5 & 2 & 5 & 0
+		\end{tabular}\\
+		\\
+		\\
+		\begin{tabular}{c c|c c c c c}
+		 & & Cost to\\
+		 & & u & v & x & y & z\\
+		 \hline
+		 From & v & 1 & 0 & 3 & 3 & 5\\
+		 & x & 4 & 3 & 0 & 3 & 2\\
+		 & z & 6 & 5 & 2 & 5 & 0
+		\end{tabular}\\
+		\\
+	\item \begin{enumerate}
+
+			\item \begin{tabular}{c|c c}
+
+					Router z & Tells w: & $D_z(x) = \infty$\\
+					& Tells y: & $D_z(x) = 4+1+1 = 6$\\
+					\hline
+					Router w & Tells y: & $D_w(x) = \infty$\\
+					& Tells z: & $D_w(x) = 1 + 4 = 5$\\
+					\hline
+					Router y & Tells z: & $D_y(x) = 4$\\
+					& Tells w: & $D_y(x) = 4$\\
+
+				\end{tabular}
+				\\
+				\\
+
+			\item \footnotesize
+				\begin{tabular}{c|c|c|c|c|c}
+
+					& $t_0$ & $t_1$ & $t_2$ & $t_3$ & $t_4$\\
+					\hline
+					Z & w: $D_z(x) = \infty$ & & Same & w: $D_z(x) = \infty$ &\\
+					& y: $D_z(x) = 6$ & & & y: $D_z(x) = 11$ & \\
+					\hline
+					W & y: $D_w(x) = \infty$ & & y: $D_w(x) = \infty$ & & Same\\
+					& z: $D_w(x) = 5$ & & z: $D_w(x) = 10$ & &\\
+					\hline
+					Y & z: $D_y(x) = 4$ & z: $D_y(x) = \infty$ & & Same & z: $D_y(x) = \infty$\\
+					& w: $D_y(x) = 4$ & w: $D_y(x) = 9$ & & & w: $D_y(x) = 14$\\
+
+				\end{tabular}
+				\\
+				\\
+				Updates as follows: Y (+ 3) $\rightarrow$ W (+ 1) $\rightarrow$ Z (+ 1) $\rightarrow$	Y (+ 3) ...\\
+				\normalsize
+				\\
+				When $t_{26}$ is reached, w tells z its distance to x is 50, meaning at $t_{27}$, z knows that its distance to x is either its direct connection to x of 50 or the distance to w plus its distance to x, which is $50 + 1 = 51$. Since it knows that its direct link has a lower cost, it choses to keep its distance to x as 50, which it then notifies to w and x. At $t_{28}$, y sees z's distance to x as 50, to which it knows its distance to x will be 53 if it follows z. As a result, it informs w that its distance to x is 53 and tells z its distance is infinate, since its shortest path requires looping through z. In the same timestamp, w still believes y's distance to x is 49, to which it reports its distance to x to z as $49 + 1 = 50$, and reports that distance as infinate to y. At $t_{29}$, w now sees the distance from y to x is 53 and from z to x is 50, so it now tells y that its shortest distance is $1 + 50 = 51$, and since that shortest route is through z, it reports that its distance is infinate to z. At $t_{30}$, y knows that the distance from w to x is 51 and z to x is 50, meaning that the shortest distance of the two is the one that follows w, informing z that its route is 52 and telling w that it is infinity, leaving us at the stable state at $t_{31}$\\
+				\\
+			\item By cutting the link between y and z, there will be no further count to infinity problem and then at $t_1$, y will inform w that its distance is 60, w will update its distance to z at $t_2$ that it is now 61, to which z will update to w at $t_3$ that its distance is now 50, meaning w now aware that its distance is 51, reporting that to y at $t_4$, to which y now knows that its distance is 52 by $t_5$, now reaching a steady state.
+
+
+		\end{enumerate}
+
+	\item \tiny
+
+	\begin{verbatim}
+# All needed modules have been imported here
+from socket import *
+import os
+import sys
+import struct
+import time
+import select
+import binascii  
+
+# Define how many pings will be sent
+ICMP_ECHO_REQUEST = 8		
+
+# Checksum function is complete and can be used directly
+def checksum(string): 
+	csum = 0
+	countTo = (len(string) // 2) * 2  
+	count = 0
+
+	while count < countTo:
+		thisVal = ord(string[count+1]) * 256 + ord(string[count]) 
+		csum = csum + thisVal 
+		csum = csum & 0xffffffff  
+		count = count + 2
+	
+	if countTo < len(string):
+		csum = csum + ord(string[len(string) - 1])
+		csum = csum & 0xffffffff 
+	
+	csum = (csum >> 16) + (csum & 0xffff)
+	csum = csum + (csum >> 16)
+	answer = ~csum 
+	answer = answer & 0xffff 
+	answer = answer >> 8 | (answer << 8 & 0xff00)
+	return answer 
+	
+def receiveOnePing(mySocket, ID, timeout, destAddr):
+	timeLeft = timeout
+	
+	while 1: 	
+		
+		#timers
+		startedSelect = time.time()
+		ready = select.select([mySocket], [], [], timeLeft)		#tells when file is ready to read/write
+		howLongInSelect = (time.time() - startedSelect)
+		
+		if ready[0] == []: #times out if no received packet
+			return
+
+
+		# Receive a packet
+		recPacket = mySocket.recvfrom(1024)
+		timeReceived = time.time()
+
+
+		# Fetch the ICMPHeader from the IP, and read information about TTL, 
+		# icmpType, code, checksum, packetID and sequence
+
+		# IP header is 20 bytes, ICMP is the following 8 bytes after
+		receivedIcmpHeader = recPacket[20:28]
+
+
+		type, code, checksum, packetID, sequence = struct.unpack("BB3H", receivedIcmpHeader)
+
+
+		# Print ping results
+		if packetID == ID:
+			return "Reply from %s: bytes=%d time=%f5ms TTL=%d" % (destAddr, len(recPacket), (timeReceived - timeSent)*1000, TTL)
+		
+
+		# Otherwise print timed out
+		timeLeft = timeLeft - howLongInSelect
+		print(howLongInSelect)
+		if timeLeft <= 0:
+			return "Request timed out."
+
+	
+def sendOnePing(mySocket, destAddr, ID):
+	# Header is type (8), code (8), checksum (16), id (16), sequence (16)
+
+	# Make a dummy header with a 0 checksum
+	# and interpret strings as packed binary data
+
+	myChecksum = 0
+
+	header = struct.pack("BB3H", ICMP_ECHO_REQUEST, 0, 0, ID, 1).decode("latin-1")
+
+	pingData = "Boi" * 69
+	
+
+	# Calculate the checksum on the data and the dummy header, using checksum function above
+	myChecksum = checksum(header + pingData)
+
+	
+	# Get the right checksum according to the operating system you are using (e.g., linux, windows), and put in the header
+	header = struct.pack("BB3H", ICMP_ECHO_REQUEST, 0, htons(myChecksum), ID, 1)
+
+		
+	# Construct ping packet by assembling header and data
+	packet = header + pingData.encode()
+
+	
+	# Send out the ping packet
+	mySocket.sendto(packet, (destAddr, 1)) #AF_INET address must be tuple, not str
+
+
+# doOnePing function is complete and can be used directly		
+def doOnePing(destAddr, timeout): 
+	icmp = getprotobyname("icmp")
+
+	# SOCK_RAW is a powerful socket type
+	mySocket = socket(AF_INET, SOCK_RAW, icmp)
+	
+	myID = os.getpid() & 0xFFFF  # Return the current process i
+	sendOnePing(mySocket, destAddr, myID)
+	delay = receiveOnePing(mySocket, myID, timeout, destAddr)
+	
+	mySocket.close()
+	return delay
+
+# ping function is complete and can be used directly	
+def ping(host, timeout=1):
+	# timeout=1 means: If one second goes by without a reply from the server,
+	# the client assumes that either the client's ping or the server's pong is lost
+	dest = gethostbyname(host)
+	print("Pinging " + dest + " using Python:")
+	print("")
+	# Send ping requests to a server separated by approximately one second
+	while True :  
+		delay = doOnePing(dest, timeout)
+		print(delay)
+		time.sleep(1)# one second
+	return delay
+
+# Specify the host to be pinged	
+ping("google.com")
+
+
+
+
+	\end{verbatim}
+
+	
+	\normalsize
+	Could not compile - permissions error
+
+
+	\item \begin{enumerate}
+
+			\item Since ICMP isn't actually communicating but rather echoing and replying, it does not require a port for communication
+
+			\item Type = 8 (Echo (ping) request)\\
+			Code = 0\\
+			\\
+			This packet also contains a sequence, an ID, and a checksum\\
+			\\
+			Checksum = 0x4d1aa [correct]\\
+			Identifier (BE) = 1\\
+			Identifier (LE) = 256\\
+			Sequence (BE) = 65\\
+			Sequence (LE) = 16640\\
+			\\
+			\item Type = 0 (Echo (ping) reply)\\
+			Code = 0\\
+			\\
+			This packet also contains a sequence, an ID, a checksum\\
+			\\
+			Checksum = 0x551a [correct]\\
+			Identifier (BE) = 1\\
+			Identifier (LE) = 256\\
+			Sequence (BE) = 65\\
+			Sequence (LE) = 16640\\
+			\\
+			\item The host IP address (Src) is 10.110.227.219\\
+			The destination IP address (Dst) is 172.217.3.110 (google.com)\\
+			\\
+			\item If you sent a UDP packet instead, the IP protocol number would not be 01, but 0x11 (17).\\
+			\\
+			\item The echo and reply packets are unsurprisingly very similar, with the only major differences being the change in type as well as the resulting change in checksum. This is because an echo expects a virtually identical packet with the same data as a reply.\\
+			\\
+			\item The failed packet also included an additional [No response seen] error component informing me that the ICMP request saw no response.
+
+		\end{enumerate}
+
+\end{enumerate}
+
+\end{document}

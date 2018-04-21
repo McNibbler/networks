@@ -1,0 +1,235 @@
+\documentclass[12pt]{article}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{enumerate}
+\usepackage{amssymb}
+\graphicspath{{/}}
+\begin{document}
+\noindent Thomas Kaunzinger\\
+EECE 2540\\
+Zhangyu Guan\\
+9/28/2017\\
+\begin{enumerate}
+	\item \begin{enumerate}
+			\item Instantaneous throughput is the rate at a given instant of time for how quickly data is transfered between the sender and reciever, differing from average throughput which is over a given time.
+			\item A bottleneck link is the link on an end-to-end throughput that is the limiting factor for data transfer speeds, as the higher speed from the other links will be forced to yeild to allow all the data to pass through the slower link.
+			\item Transmission delay is the delay caused when packets leave the queue and are moved onto the physical link to send while propagation delay is the delay caused by the actual physical movement of the signals propagating through the medium of the physical link (near light speed).
+			\item Traffic intensity is equal to $\dfrac{L \times a}{R}$, where $L$ is the length of the packet (in bits), $a$ is the packet arrival rate, and $R$ is the link bandwidth. When traffic intensity is low, the queuing delay is small, but as it approaches 1, the queuing delay increases asymptotically towards infinate queuing delay.
+		\end{enumerate}
+
+	\item Circuit-switched networks allow for each user to have a guaranteed circuit-like performance at the cost of some circuit segments going idle if not being used, as circuits can not be shared, making it ideal for smaller networks, as opposed to packet-switching, which gives users a bit of the bandwidth only when active. Furthermore, in a circuit-switched network, TDM transmits a set amount of data per user for each user in a set time frame, as opposed to FDM which gives a user a continuous stream on a frequency band at the cost of needing to modulate and demodulate the signal.
+
+	\item \begin{enumerate}
+			\item Since each user will need a continuous circuit of 1Mbps and the link is 2Mbps, the inflexibility of circuit-switching would mean that there can only be 2 users at a time.
+			\item With 2 or fewer users maxing at 1Mbps, they will not be able to overload the bandwidth of the 2Mbps link, even at max capacity and both users on simultaneously. With 3 users at max 1Mbps, there will be a queuing delay as the 2Mbps link is bottlenecking the 3Mbps being transmitted by the users simultaneously.
+			\item Since a user transmits only $20\%$ of the time, there's a $20\%$ chance of any individual user transmitting.
+			\item $(0.2)^{3} = 0.008$ There is a 0.8\% chance of all 3 users transmitting at once.
+		\end{enumerate}
+
+	\item \begin{enumerate}
+			\item In this situation, a circuit-switched network would be good idea, as the application would have a dedicated frequency line on the circuit to continuously transmit data at peak bandwidth with no interruption.
+			\item Since the individual users' data rates never excedes the capacity of each link, there won't be a need for extensive congestion control as there is nothing bottlenecking the flow of data and requiring queuing.
+		\end{enumerate}
+
+	\item \begin{enumerate}
+			\item Ideally, if each switch only needs to send the signal to one adjacent switch in the network before it reaches its destination, then there could potentially be 16 connections, with 4 from each switch and only linking to one adjacent switch, e.g. $(A \rightarrow B)$ $(B \rightarrow C)$, etc.
+			\item Assuming the connections have to go $(A \rightarrow C)$, then the only circuit paths the connections can take are $(A \rightarrow B), (B \rightarrow C)$ or $(A \rightarrow D), (D \rightarrow C)$, which can both use 4 links per, making 8 possible connections.
+			\item It is possible to route these connections as long as you break up the connections to run two ways. For $(A \rightarrow C)$, 2 of the 4 connections would take the route $(A \rightarrow B), (B \rightarrow C)$ and the other 2 would take $(A \rightarrow D), (D \rightarrow C)$. Likewise, for the $(B \rightarrow D)$ connections, 2 would have to go $(B \rightarrow A), (A \rightarrow D)$, and the other two would go $(B \rightarrow C), (C \rightarrow D)$.
+		\end{enumerate}
+	\item \begin{enumerate}
+			\item 
+			$d_{nodal} = d_{proc} + d_{queue} + d_{trans} + d_{prop}$\\
+				$d_{queue} = 0$\\
+				$d_{nodal} = d_{proc} + d_{trans} + d_{prop}$\\
+				\\
+				$d_{nodal} = d_{proc} + \sum\limits_{i=1}^{3} \big(\dfrac{ d_{i} }{ s_{i} } + \dfrac{L}{R_{i}} \big)$
+			\item $d_{queue} = 0$\\
+				\\
+				$d_{proc} = 0.003 \times 2 = 0.006 seconds$\\
+				\\
+				$d_{trans} = 3\times \dfrac{8 \times 1500}{2000000} = 0.018 seconds $\\
+				\\
+				$d_{prop} = \dfrac{1000000 + 4000000 + 5000000}{2.5\times 10^{8}} = 0.040seconds $\\
+				\\
+				$d_{nodal} = 0.006 + 0 + 0.018 + 0.04 = 0.064 seconds$
+		\end{enumerate}
+
+	\item The connection now only has to experience the transmission delay of the data feeding to the link (now $\frac{1}{3}$ of the previous transmission delay) and then the propagation delay as it travels through the medium of the wire, making $d_{nodal} = d_{trans} + d_{prop} = 0.006 + 0.040 = 0.046seconds$
+
+	\item $\dfrac{(8\times 1500)\times (4 + \frac{1}{2})}{2000000} = 0.027seconds$\\
+		\\
+		$\dfrac{n\times L + (L-x)}{R}$
+
+	\item \begin{enumerate}
+			\item $d_{total} = d_{queue} + d_{trans}$\\
+				\\
+				$\dfrac{I\times L}{R(1 - I)} + \dfrac{L}{R}$\\
+				\\
+				$\dfrac{I\times L + L(1 - I)}{R(1 - I)}$\\
+				\\
+				$\dfrac{I\times L - I\times L + L}{R(1 - I)}$\\
+				\\
+				$\dfrac{L}{R(1 - I)}$\\
+				\\
+				$\dfrac{L}{R(1 - \dfrac{L a}{R})}$\\
+				$d_{total} = \dfrac{L}{R - L a}$\\
+			\item If $x = L/R$ then total delay can be plotted as $f(x) = \dfrac{x}{1 - ax}$, with a being an arrival rate where $a < L/R$\\
+			\\
+			\includegraphics{graph}\\
+			Delay assuming arrival rate is set to 1
+		\end{enumerate}
+
+	\item $Time = 2 \times RTT_0 + 2\times\sum\limits_{i = 1}^{n}(RTT_i)$\\
+		As one RTT is the time required to transfer to another DNS server, the total elapsed time would be the sum of all the RTTs required to transfer to the correct lookup and then the same time to travel back to the user and establish the connection, multiplying the time by two. Now that the client knows the location of the server, another $2\times RTT_0$ is required every time a connection is established. Since the object size is negligible, the time taken is merely the sum of the RTTs to and from the final server and the RTTs to establish connections with the network.
+
+	\item \begin{enumerate}
+			\item With a single non-persistent HTTP connection, it would take 8 times to get all the objects, as it would have to establish the connection and perform $2\times RTT_0$ for each and every object, making the time elapsed equal to $8\times (2\times RTT_0) = 16 \times RTT_0$
+			\item With 5 parallel non-persistent HTTP connections, it would establish 5 connections which will download 5 of the 8 items in a time frame of $2\times RTT_0$. Afterwards, 3 of the connections would return to download the remaining objects in another time frame of $2\times RTT_0$, making the final time equal to $2\times (2\times RTT_0) = 4\times RTT_0$
+			\item With a persistent HTTP connection, the connection only needs to reach the server and back, already requiring a connection time of $2\times RTT_0$, and will need an additional $RTT$ for each of the additional 7 objects being referred, making the total time equal to $2\times RTT_0 + 7\times RTT_0 = 9\times RTT_0$
+		\end{enumerate}
+
+	\item \begin{enumerate}
+			\item $d_{total} = d_{access} + d_{inter}$\\
+				\\
+				$\Delta_{access} = \dfrac{850000}{15000000} = 0.0567 seconds$\\
+				\\
+				$\beta = 16req/s$\\
+				$d_{access} = \Delta / (1 - \Delta \beta) = 0.6071 seconds$\\
+				$d_{inter} = 3 seconds$\\
+				$d_{total} = 0.6071 + 3 = 3.607$\\
+			\item $\Delta_{LAN} = \dfrac{850000}{100000000} = 0.0085 seconds$\\
+				\\
+				$\beta = 16req/s$\\
+				$d_{accessLAN} = \Delta / (1 - \Delta \beta) = 0.0098 seconds$\\
+				$miss = 0.4$\\
+				$hit\times d_{accessLAN} + miss\times d_{total} = d_{totalLAN}$\\
+				$0.6\times 0.0098 + 0.4\times 3.607 = 1.449seconds$\\
+
+		\end{enumerate}
+
+	\item \begin{enumerate}
+			\item Since circuit switching is used, each user needs a 100Kbps portion of the bandwidth whether they are transmitting data or not, meaning that the 1Mbps link can only support up to $1000 / 100 = 10$ users. 
+			\item With statistical multiplexing in a packet-switched network, each user sends packets based on need rather than in a rotating time frame, sharing the bandwidth on demand and in no specific order. With TDM in a circuit-switched network, each user gets a guaranteed time frame where they can send a set amount of data whether they use their revolving time frame or not, however they will not get more bandwidth if they are sending more than other users at a given time.
+		\end{enumerate}
+
+	\item $d_{prop} = \dfrac{2000\times 10^4}{2.5\times 10^8} = 0.08seconds$\\
+	\\
+	The most data that can be on the link at one time is $Max = d_{prop} \times R = 0.08 \times 2000000 = 160000bits$\\
+	\\
+	Since $160000 bits < file = 800000bits$, then that means the link will be fully filled with $160000bits$ of data for $800000 / 160000 = 5seconds$\\
+
+	\item \begin{verbatim}
+#Python dates functions
+#Networks 9/28/17
+
+#imports datetime and relativedelta from
+#dateutil (third party library)
+import datetime
+from dateutil.relativedelta import relativedelta
+
+#finds today's date and relative dates
+#of the next and previous months
+currentDate = datetime.datetime.now()
+previousMonth = currentDate - relativedelta(months = 1)
+nextMonth = currentDate + relativedelta(months = 1)
+
+#finds days until birthday
+birthdayDate = datetime.datetime(2018, 1, 8)
+changeInDate = (birthdayDate - currentDate).days + 1
+
+#prints results
+print("The current date and time is: ",
+    currentDate.replace(microsecond = 0) , "\n")
+print("The previous month's date and time is: ", 
+    previousMonth.replace(microsecond = 0) , "\n")
+print("The next month's date and time is: ",
+    nextMonth.replace(microsecond = 0) , "\n")
+print("There are ",
+    changeInDate," days until your birthday!\n")
+		\end{verbatim}
+		\includegraphics[scale=1.5]{dateProof}\\
+
+	\item $1 - \sum\limits_{n = 0}^{10}\big ( nCr(x,n)\times p^n \times (1-p)^{x-n}\big ) $\\
+		\begin{verbatim}
+#Calculate probability of more than N users being online
+#from math import factorial
+
+testUsersSimultaneous = 10
+testUsers = 35
+testProbPerUser = 0.1
+
+#nCr helper function for prob function
+def nCr(n,r):
+	return ((factorial(n))//(factorial(r) * factorial( n - r )))
+
+#uses binomial distribution to find the probability of at
+#least n users transmitting and subtracts to find the
+#probability that more than n users are transmitting
+def prob(users, usersSimultaneous, probPerUser):
+    binom = 0
+    for i in range(0,usersSimultaneous + 1):
+        binom += nCr(users, i)*(probPerUser**i) \
+        *((1 - probPerUser)**(users - i))
+    return (1 - binom)
+
+print(prob(testUsers, testUsersSimultaneous, testProbPerUser))
+		\end{verbatim}
+		\includegraphics[scale=1.5]{probabilityProof}\\
+		\\
+		\includegraphics[scale=2]{nspire}\\
+		Plot of the above function with the probability of a user being online set to 0.1 and the number of users ranging from 0 to 300.\\
+
+	\item \begin{verbatim}
+#client.py
+from socket import *
+import time
+
+#To assign port and message to send to server
+PORT_NUMBER = 12000
+message = "ping"
+
+#server address to send to (127.0.0.1 home to test)
+serverName = "localhost"
+
+#number of pings to send to server
+pingNum = 10
+
+#create a UDP socket
+clientSocket = socket(AF_INET, SOCK_DGRAM)
+
+#times out after one second if no response
+clientSocket.settimeout(1)
+
+#for pingNum pings
+for i in range (0, pingNum):
+
+    try:
+        #time before performing function to compare with later
+        time1 = time.clock()
+
+        #sends message to server
+        clientSocket.sendto(message.encode(),(serverName, PORT_NUMBER))
+
+        #recieves message from server if it responds
+        newMessage, serverAddress = clientSocket.recvfrom(1024)
+
+        #shows new message sent back and reports time
+        #taken for server to respond
+        print(newMessage.decode())
+        print("Retrieved in", round ((1000*(time.clock() - time1)), 4),\
+        "milliseconds")
+	
+    #if the server doesn't respond after the amount of time specified
+    except timeout:
+
+        print("TIMEOUT")
+
+#closes the socket when the program ends
+clientSocket.close()
+		\end{verbatim}
+		\includegraphics[scale=1.5]{clientProof}\\
+
+\end{enumerate}
+
+\end{document}
